@@ -248,7 +248,8 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
 locals {
   create_iam_role        = local.create && var.create_iam_role
   # Added Try for Testing
-  iam_role_name          = try(coalesce(var.iam_role_name, "${var.cluster_name}-cluster"))
+  # iam_role_name          = coalesce(var.iam_role_name, "${var.cluster_name}-cluster")
+  iam_role_name          = var.iam_role_name
   iam_role_policy_prefix = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
 
   cluster_encryption_policy_name = coalesce(var.cluster_encryption_policy_name, "${local.iam_role_name}-ClusterEncryption")
@@ -287,7 +288,7 @@ resource "aws_iam_role" "this" {
   count = local.create_iam_role ? 1 : 0
 
   name        = var.iam_role_use_name_prefix ? null : local.iam_role_name
-  name_prefix = try(var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null)
+  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null
   path        = var.iam_role_path
   description = var.iam_role_description
 
