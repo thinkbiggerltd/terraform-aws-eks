@@ -287,7 +287,7 @@ resource "aws_iam_role" "this" {
   count = local.create_iam_role ? 1 : 0
 
   name        = var.iam_role_use_name_prefix ? null : local.iam_role_name
-  name_prefix = var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null
+  name_prefix = try(var.iam_role_use_name_prefix ? "${local.iam_role_name}${var.prefix_separator}" : null)
   path        = var.iam_role_path
   description = var.iam_role_description
 
