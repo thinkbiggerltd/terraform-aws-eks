@@ -178,7 +178,7 @@ resource "aws_security_group" "cluster" {
   count = local.create_cluster_sg ? 1 : 0
 
   name        = var.cluster_security_group_use_name_prefix ? null : local.cluster_sg_name
-  name_prefix = try(var.cluster_security_group_use_name_prefix ? "${local.cluster_sg_name}${var.prefix_separator}" : null)
+  name_prefix = var.cluster_security_group_use_name_prefix ? "${local.cluster_sg_name}${var.prefix_separator}" : null
   description = var.cluster_security_group_description
   vpc_id      = var.vpc_id
 
@@ -247,7 +247,8 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
 
 locals {
   create_iam_role        = local.create && var.create_iam_role
-  iam_role_name          = coalesce(var.iam_role_name, "${var.cluster_name}-cluster")
+  # Added Try for Testing
+  iam_role_name          = try(coalesce(var.iam_role_name, "${var.cluster_name}-cluster"))
   iam_role_policy_prefix = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
 
   cluster_encryption_policy_name = coalesce(var.cluster_encryption_policy_name, "${local.iam_role_name}-ClusterEncryption")
