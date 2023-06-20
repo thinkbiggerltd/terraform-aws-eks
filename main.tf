@@ -178,7 +178,7 @@ resource "aws_security_group" "cluster" {
   count = local.create_cluster_sg ? 1 : 0
 
   name        = var.cluster_security_group_use_name_prefix ? null : local.cluster_sg_name
-  name_prefix = var.cluster_security_group_use_name_prefix ? "${local.cluster_sg_name}${var.prefix_separator}" : null
+  name_prefix = try(var.cluster_security_group_use_name_prefix ? "${local.cluster_sg_name}${var.prefix_separator}" : null)
   description = var.cluster_security_group_description
   vpc_id      = var.vpc_id
 
